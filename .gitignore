@@ -1,0 +1,6 @@
+# datos locales
+.env
+sesion_edenred.json
+__pycache__/
+pruebas/
+venv/

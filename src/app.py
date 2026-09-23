@@ -5,23 +5,8 @@ from playwright.async_api import async_playwright
 import time
 from dotenv import load_dotenv
 import json
-import threading
-from flask import Flask
 
 load_dotenv()
-
-app_web = Flask(__name__)
-
-@app_web.route('/')
-def home():
-    return "¡El bot está vivo y funcionando!"
-
-def iniciar_servidor_web():
-    # Render asigna un puerto automáticamente a través de la variable PORT
-    puerto = int(os.environ.get("PORT", 10000))
-    app_web.run(host="0.0.0.0", port=puerto)
-
-
 
 # --- TUS CREDENCIALES ---
 TOKEN = os.getenv("TOKEN")
@@ -157,11 +142,7 @@ async def responder_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE) 
 
 
 if __name__ == "__main__":
-    print("Iniciando servidor web para Render...")
-    # Ejecutamos el servidor web en un hilo paralelo para que no bloquee al bot
-    hilo_web = threading.Thread(target=iniciar_servidor_web)
-    hilo_web.start()
-
+    
     print("Bot encendido y escuchando mensajes...")
     app = ApplicationBuilder().token(TOKEN).build()
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder_mensaje))

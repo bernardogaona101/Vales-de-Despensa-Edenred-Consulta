@@ -1,6 +1,6 @@
 import os
 from telegram import Update
-from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes
+from telegram.ext import ApplicationBuilder, MessageHandler, filters, ContextTypes,CommandHandler
 from playwright.async_api import async_playwright
 import time
 from dotenv import load_dotenv
@@ -28,6 +28,7 @@ TOKEN = os.getenv("TOKEN")
 CHAT_ID = int(os.getenv("CHAT_ID"))
 CORREO = os.getenv("CORREO")
 PASSWORD = os.getenv("PASSWORD")
+CHAT_ID_2 = int(os.getenv("CHAT_ID_2"))
 
 async def obtener_saldo_edenred():
     saldo = "No se pudo obtener el saldo"
@@ -139,7 +140,7 @@ async def responder_mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     chat_id_actual = update.effective_chat.id
     mensaje = update.message.text.lower()
 
-    if chat_id_actual == CHAT_ID:
+    if chat_id_actual == CHAT_ID or chat_id_actual == CHAT_ID_2:
         if "saldo" in mensaje:
             await update.message.reply_text("Consultando a Edenred, dame un momento...")
 
@@ -167,5 +168,6 @@ if __name__ == "__main__":
 
     print("Bot encendido y escuchando mensajes...")
     app = ApplicationBuilder().token(TOKEN).build()
-    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder_mensaje))
+    app.add_handler(CommandHandler("saldo", responder_mensaje)) # ejecutar con comando
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, responder_mensaje)) # ejecutar con mensaje
     app.run_polling()

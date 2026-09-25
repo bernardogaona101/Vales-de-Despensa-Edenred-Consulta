@@ -114,6 +114,9 @@ async def obtener_saldo_edenred():
                 await context.storage_state(path=archivo_sesion)
                 print("¡Sesión guardada exitosamente!")
 
+            # se agrega una espera porque aveces no da tiempo de cargar por el servidor
+            await page.wait_for_timeout(4000)
+
             # 3. Buscar el saldo
             await page.wait_for_selector('.card-balance', timeout=15000)
             elemento = await page.query_selector('.card-balance')
